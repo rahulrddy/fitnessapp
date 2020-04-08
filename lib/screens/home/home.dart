@@ -9,10 +9,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        backgroundColor: Colors.brown[50],
+        backgroundColor: Colors.black54,
         appBar: AppBar(
           title: Text('Fitness App'),
-          backgroundColor: Colors.brown[400],
+          backgroundColor: Colors.white24,
           elevation: 0.0,
           actions: <Widget>[
             FlatButton.icon(
@@ -24,6 +24,15 @@ class Home extends StatelessWidget {
             )
           ],
         ),
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          child: Center(
+            child: Text(
+                'Welcome to Your Fitness App',
+                style: TextStyle(color: Colors.blueAccent)
+              ),
+          )
+        )
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:fitnessapp/services/auth.dart';
+import 'package:fitnessapp/shared/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:fitnessapp/shared/constants/widgets-style.dart';
 
 class Register extends StatefulWidget {
 
@@ -14,18 +16,21 @@ class _RegisterState extends State<Register> {
 
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
+
+  bool loading = false;
   String email = '';
   String password = '';
   String error = '';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.brown[100],
+    return loading ? Loading() : Scaffold(
+      backgroundColor: Colors.black54,
       appBar: AppBar(
-        backgroundColor: Colors.brown[400],
+        backgroundColor: Colors.white24,
         elevation: 0.0,
-        title: Text('Sign up to the Fitness App'),
+        title: Text('Yours Fitness'),
+        centerTitle: true,
         actions: <Widget>[
           FlatButton.icon(
             onPressed: () {
@@ -43,6 +48,7 @@ class _RegisterState extends State<Register> {
             children: <Widget>[
               SizedBox(height: 20.0),
               TextFormField(
+                decoration: textInputDecoration.copyWith(hintText: 'Email'),
                 validator: (value) => value.isEmpty ? 'Enter an email' : null,
                 onChanged: (value) {
                   setState(() => email = value);
@@ -50,6 +56,7 @@ class _RegisterState extends State<Register> {
               ),
               SizedBox(height: 20.0),
               TextFormField(
+                decoration: textInputDecoration.copyWith(hintText: 'Password'),
                 validator: (value) => value.length < 6 ? 'Enter a password 6+ chars long' : null,
                 obscureText: true,
                 onChanged: (value) {
@@ -57,22 +64,27 @@ class _RegisterState extends State<Register> {
                 }
               ),
               SizedBox(height: 20.0),
-              RaisedButton(
-                color: Colors.pink[500],
-                child: Text(
-                  'Register',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    dynamic result = await _authService.register(email, password);
-                    if (result == null) {
-                      setState(() => error = 'please supply a valid email');
+              SizedBox(
+                width: double.infinity,
+                child: RaisedButton(
+                  color: Colors.pink[500],
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      setState(() => loading = true);
+                      dynamic result = await _authService.register(email, password);
+                      if (result == null) {
+                        setState(() {
+                          error = 'please supply a valid email';
+                          loading = false;
+                        });
+                      }
                     }
-                  } else {
-                    print('form error');
-                  }
-                },
+                  },
+                ),
               ),
               SizedBox(height: 12.0),
               Text(
